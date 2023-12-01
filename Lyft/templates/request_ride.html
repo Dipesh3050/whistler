@@ -1,0 +1,50 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+
+    <meta charset="UTF-8">
+    <title>Request a Ride</title>
+    <style>
+        body {
+            display: flex;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <h2 class="display-5">Requested Ride Details</h2>
+
+        <p class="mb-2">Employee Name: {{ ride.employee_name }}</p>
+        <p class="mb-2">Passenger Location: {{ ride.passenger_location }}</p>
+        <p class="mb-2">Destination: {{ ride.destination }}</p>
+        <p class="mb-2">Ride Status: {{ ride.ride_status }}</p>
+        
+        {% if ride_request.ride_status == 'Requested' %}
+            <form method="post" action="{% url 'approve_or_deny_request' ride_request.ride.id ride_request.pk %}" class="mb-3">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="approve">
+                <button type="submit" class="btn btn-success">Approve</button>
+            </form>
+
+            <form method="post" action="{% url 'approve_or_deny_request' ride_request.ride.id ride_request.pk %}" class="mb-3">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="deny">
+                <button type="submit" class="btn btn-danger">Deny</button>
+            </form>
+        {% endif %}
+        <a href="{% url 'home' %}" class="btn btn-primary">Back to Home</a>
+    </div>
+</body>
+</html>

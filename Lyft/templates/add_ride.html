@@ -1,0 +1,49 @@
+{% load static %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+
+    <meta charset="UTF-8">
+    <title>Add Ride</title>
+    <style>
+        body {
+            display: flex;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <h1 class="display-4">Add Ride</h1>
+        <form method="post" action="{% url 'add_ride' %}" class="mb-4">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="{{ form.passenger_location.id_for_label }}">Passenger Location:</label>
+                {{ form.passenger_location }}
+            </div>
+            <div class="mb-3">
+                <label for="{{ form.destination.id_for_label }}">Destination:</label>
+                {{ form.destination }}
+            </div>
+            <div class="mb-3">
+                <label for="{{ form.available_seats.id_for_label }}">Available Seats:</label>
+                {{ form.available_seats }}
+            </div>
+        
+            <button type="submit" class="btn btn-primary">Add Ride</button>
+        </form>
+        <a href="{% url 'home' %}" class="btn btn-secondary">Cancel</a>
+    </div>
+</body>
+</html>

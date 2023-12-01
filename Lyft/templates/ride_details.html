@@ -1,0 +1,54 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+
+    <meta charset="UTF-8">
+    <title>Ride Details</title>
+    <style>
+        body {
+            display: flex;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <h1 class="display-4">Ride Details</h1>
+        <p class="bg-danger text-white shadow p-3">{{ ride.employee_name }}</p>
+        {% if user.username == ride.employee_name %}
+            {% if ride.ride_requests.exists %}
+                <p>Requester Name: {{ ride.ride_requests.first.passengers.first.username }}</p>
+            {% else %}
+                <p>No requests for this ride.</p>
+            {% endif %}
+        {% endif %}
+        <p>Passenger Location: {{ ride.passenger_location }}</p>
+        <p>Destination Location: {{ ride.destination }}</p>
+
+        {% if ride.available_seats > 0 %}
+            <p>Available Seats: {{ ride.available_seats }}</p>
+            {% if user.username != ride.employee_name %}
+                <form method="post" action="{% url 'request_ride' ride.id %}" class="mb-3">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">Request a Ride</button>
+                </form>
+            {% endif %}
+        {% else %}
+            <p>No available seats for this ride.</p>
+        {% endif %}
+
+        <a href="{% url 'home' %}" class="btn btn-primary">Go to Home Page</a>
+    </div>
+</body>
+</html>

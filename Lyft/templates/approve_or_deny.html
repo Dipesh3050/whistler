@@ -1,0 +1,43 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    <meta charset="UTF-8">
+    <title>Requested Ride Details</title>
+    <style>
+        body {
+            display: flex;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <h1 class="display-4">Requested Ride Details</h1>
+        <p>Ride_Id: {{ ride_request.ride.id }}</p>
+        <p>Passenger: {{ ride_request.passengers.first.username}}</p>
+
+        <form method="post" action="{% url 'approve_request' ride_request.ride.id ride_request.pk %}" class="mb-3">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="approve">
+            <button type="submit" class="btn btn-success">Approve</button>
+        </form>
+
+        <form method="post" action="{% url 'deny_request' ride_request.ride.id ride_request.pk %}" class="mb-3">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="deny">
+            <button type="submit" class="btn btn-danger">Deny</button>
+        </form>
+    </div>
+</body>
+</html>

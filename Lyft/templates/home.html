@@ -1,0 +1,110 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <style>
+        body {
+            display: flex;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container ">
+            <a class="navbar-brand" style="color: rgb(255, 123, 0);" href="{% url 'home' %}">Welcome to Lyft</a>
+            
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" style="flex-direction: row;"  id="navbarNav">        
+                <h6 style="margin:auto; margin-left: 2%; margin-right: auto;"><a href="{% url 'my_rides' %}" class="text-decoration-none  text-light  "  >My Rides</a></h6>
+                <ul class="list-group">
+                    {% for my_ride in user_rides %}
+                        <li class="list-group-item">
+                            <a href="{% url 'ride_details' my_ride.id %}" class="text-decoration-none">{{ my_ride.employee_name }}</a> - {{ my_ride.passenger_location }} to {{ my_ride.destination }}
+                            <p>Available Seats: {{ my_ride.available_seats }}</p>
+                            <p>Ride Date: {{ my_ride.date }}</p>
+                        </li>
+                    {% endfor %}
+                </ul>        
+            </div>
+            <div class="collapse navbar-collapse" style="flex-direction: row-reverse;"  id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" style="color: aqua " href="{% url 'log_out' %}">Log Out</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5 ">
+        <h1 style="margin-top: auto;">Hi, {{ user.username }}</h1>
+        <p class="lead">Find and share rides with your colleagues.</p>
+        <div class="mb-3 mt-1"><a class="btn btn-danger" href="{% url 'add_ride' %}">Add Ride</a></div>
+        
+
+        <div class="card mt-1">
+            <div class="card-body">
+                <h2 class="mt-1">Available Rides</h2>
+                <ul class="list-group">
+                    {% for ride in available_rides %}
+                        <li class="list-group-item">
+                            <a href="{% url 'ride_details' ride.id %}" class="text-decoration-none">{{ ride.employee_name }}</a> - {{ ride.passenger_location }} to {{ ride.destination }}
+                            <p>Available Seats: {{ ride.available_seats }}</p>
+                            <p>Ride Date: {{ ride.date }}</p>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        
+        <h2 class="mt-5">Ride Requests</h2>
+        <ul class="list-group">
+            {% for request in booked_rides %}
+                <li class="list-group-item">
+                    <a href="{% url 'ride_details' request.ride.id %}" class="text-decoration-none">{{ request.passengers.first.username }}</a> - {{ request.ride.passenger_location }} to {{ request.ride.destination }}
+                    <p>Ride Date: {{ request.ride.date }}</p>
+                    <p>Ride Status: {{ request.ride_status }}</p>
+                    {% if request.ride_status == 'Requested' %}
+                        <form method="post" action="{% url 'approve_request' request.ride.id request.pk %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success">Approve</button>
+                        </form>
+                        <form method="post" action="{% url 'deny_request' request.ride.id request.pk %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Deny</button>
+                        </form>
+                    {% endif %}
+                </li>
+            {% endfor %}
+            {% for request in requested_rides %}
+                <li class="list-group-item">
+                    <a href="{% url 'ride_details' request.ride.id %}" class="text-decoration-none">{{ request.ride.employee_name }}</a> - {{ request.ride.passenger_location }} to {{ request.ride.destination }}
+                    <p>Ride Date: {{ request.ride.date }}</p>
+                    <p>Ride Status: {{ request.ride_status }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+
+        
+    </div>
+</body>
+</html>

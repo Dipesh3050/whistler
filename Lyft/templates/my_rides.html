@@ -1,0 +1,42 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+
+    <meta charset="UTF-8">
+    <title>My Rides</title>
+    <style>
+        body {
+            display: flex;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <h1 class="display-4">My Rides</h1>
+        
+        <ul class="list-group">
+            {% for my_ride in created_rides %}
+                <li class="list-group-item">
+                    <a href="{% url 'ride_details' my_ride.id %}" class="text-decoration-none">{{ my_ride.employee_name }}</a> - {{ my_ride.passenger_location }} to {{ my_ride.destination }}
+                    <p>Available Seats: {{ my_ride.available_seats }}</p>
+                    <p>Ride Date: {{ my_ride.date }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <div class="mt-4"><a href="{% url 'home' %}" class="btn btn-primary">Home</a></div>
+    </div>
+</body>
+</html>

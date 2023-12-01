@@ -1,0 +1,39 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+
+    <meta charset="UTF-8">
+    <title>Approved Ride Details</title>
+    <style>
+        body {
+            display: flex;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <h1 class="display-4">Approved Ride Details</h1>
+        <p>Ride ID: {{ ride.id }}</p>
+        <h2>Passengers:</h2>
+        <ul class="list-group">
+            <li class="list-group-item">{{ requester.username }} - Seat Status: Approved</li>
+        </ul>
+
+        <p>Available Seats: {{ ride.available_seats }}</p>
+
+        <a href="{% url 'home' %}" class="btn btn-primary">Go to Home Page</a>
+    </div>
+</body>
+</html>
